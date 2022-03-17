@@ -8,16 +8,18 @@ import taboolib.platform.util.isAir
 import taboolib.platform.util.modifyLore
 object CommandLore {
 
-    // fltools lore append/insert/pop <...>
+
     val command = subCommand {
         literal("append") {
             // text
             dynamic {
                 execute<Player> { sender, _, argument ->
-                    if (sender.itemInHand.isAir()) {
+                   val  playerInventory= sender.inventory
+                   val itemStack= playerInventory.itemInMainHand
+                    if (itemStack.isAir()) {
                         return@execute
                     }
-                    sender.itemInHand.modifyLore {
+                    itemStack.modifyLore {
                         add(argument.colored())
                     }
                 }
@@ -27,7 +29,9 @@ object CommandLore {
             // line
             dynamic {
                 suggestion<Player>(uncheck = true) { sender, _ ->
-                    (1..(sender.itemInHand.itemMeta?.lore?.size ?: 1)).map { it.toString() }
+                    val  playerInventory= sender.inventory
+                    val itemStack= playerInventory.itemInMainHand
+                    (1..(itemStack.itemMeta?.lore?.size ?: 1)).map { it.toString() }
                 }
                 restrict<Player> { _, _, argument ->
                     Coerce.asInteger(argument).isPresent
@@ -35,10 +39,12 @@ object CommandLore {
                 // text
                 dynamic {
                     execute<Player> { sender, context, argument ->
-                        if (sender.itemInHand.isAir()) {
+                        val  playerInventory= sender.inventory
+                        val itemStack= playerInventory.itemInMainHand
+                        if (itemStack.isAir()) {
                             return@execute
                         }
-                        sender.itemInHand.modifyLore {
+                        itemStack.modifyLore {
                             addSafely(context.argument(-1)!!.toInt()-1, argument.colored(), "")
                         }
                     }
@@ -52,10 +58,12 @@ object CommandLore {
                     Coerce.asInteger(argument).isPresent
                 }
                 execute<Player> { sender, _, argument ->
-                    if (sender.itemInHand.isAir()) {
+                    val  playerInventory= sender.inventory
+                    val itemStack= playerInventory.itemInMainHand
+                    if (itemStack.isAir()) {
                         return@execute
                     }
-                    sender.itemInHand.modifyLore {
+                    itemStack.modifyLore {
                         try {
                             sender.sendMessage("已移除Lore: ${this.removeAt(argument.toInt()-1)}")
                         }
@@ -66,10 +74,12 @@ object CommandLore {
                 }
             }
             execute<Player> { sender, _, _ ->
-                if (sender.itemInHand.isAir()) {
+                val  playerInventory= sender.inventory
+                val itemStack= playerInventory.itemInMainHand
+                if (itemStack.isAir()) {
                     return@execute
                 }
-                sender.itemInHand.modifyLore {
+                itemStack.modifyLore {
                     if (isEmpty()) return@modifyLore
                     this.removeLast()
                 }
