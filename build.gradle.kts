@@ -6,8 +6,12 @@ plugins {
 }
 
 taboolib {
-    install("common")
-    install("common-5")
+    install("common", "common-5")
+    install("module-chat")
+    install("module-configuration")
+    install("module-nms", "module-nms-util")
+    install("module-kether")
+    install("module-metrics")
     install("platform-bukkit")
     classifier = null
     version = "6.0.7-44"
